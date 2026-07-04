@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>☄️!!!Asteroid!!!☄️</title>
+<title>Choose Your Adventure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -23,6 +23,8 @@
     --rust: #A64B3A;
     --line: #DCD5C2;
     --focus-ring: #1D5DE6;
+    --tooltip-bg: #23241F;
+    --tooltip-fg: #FDFBF7;
 
     --font-display: "Fraunces", Georgia, serif;
     --font-body: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
@@ -164,10 +166,11 @@
   }
 
   /* ============================================================
-     TRAIL — visual + textual journey map (signature element)
+     TRAIL — visual + textual journey map (Re-oriented Left)
      ============================================================ */
   nav.trail{
     margin-bottom: 1.75rem;
+    text-align: left;
   }
   .trail-label{
     font-size: .8rem;
@@ -181,6 +184,7 @@
     list-style:none;
     display:flex;
     align-items:center;
+    justify-content: flex-start;
     gap: 0;
     margin:0; padding:0;
     overflow-x:auto;
@@ -193,7 +197,7 @@
   }
   .trail-track li + li::before{
     content:"";
-    width: 22px;
+    width: 16px;
     height: 2px;
     background: var(--line);
     flex-shrink:0;
@@ -214,14 +218,14 @@
   }
   .trail-step:disabled{ cursor:default; }
   .trail-dot{
-    width: 34px; height: 34px;
+    width: 30px; height: 30px;
     border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
     background: var(--paper-raised);
     border: 2px solid var(--line);
-    font-size: 1rem;
+    font-size: .9rem;
   }
   .trail-step[data-current="true"] .trail-dot{
     border-color: var(--amber);
@@ -233,13 +237,13 @@
     border-color: var(--pine);
   }
   .trail-step-label{
-    font-size: .68rem;
+    font-size: .65rem;
     text-align:center;
     line-height:1.2;
     white-space: nowrap;
     overflow:hidden;
     text-overflow: ellipsis;
-    max-width: 84px;
+    max-width: 80px;
   }
 
   /* ============================================================
@@ -258,6 +262,17 @@
     display:block;
     margin-bottom:.5rem;
     line-height:1;
+  }
+
+  /* Added style for customizable images */
+  .scene-image {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: calc(var(--radius) - 4px);
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--line);
+    display: none; /* Dynamic control via JS */
   }
 
   .scene-heading{
@@ -313,7 +328,7 @@
     width:100%;
     text-align:left;
     display:flex;
-    align-items:flex-start;
+    align-items:center;
     gap:.75rem;
     background: var(--paper);
     border: 2px solid var(--line);
@@ -339,13 +354,6 @@
   .choice-label{
     font-weight:700;
     display:block;
-    margin-bottom:.15rem;
-  }
-  .choice-hint{
-    display:block;
-    font-size: .88rem;
-    color: var(--ink-soft);
-    font-weight:400;
   }
 
   /* ============================================================
@@ -386,7 +394,7 @@
 
   <header class="top">
     <div>
-      <h1 class="story-title" id="story-title">☄️!!!Asteroid!!!☄️</h1>
+      <h1 class="story-title" id="story-title">Choose Your Adventure</h1>
       <p class="story-sub">A choose-your-path story — read, then pick what happens next.</p>
     </div>
 
@@ -405,7 +413,9 @@
 
   <main id="scene">
     <div class="scene-card">
-      <span class="scene-icon" id="sceneIcon" aria-hidden="true">📖</span>
+      <span class="scene-icon" id="sceneIcon" aria-hidden="true">🌅</span>
+      
+      <img src="" alt="Scene Illustration" class="scene-image" id="sceneImage">
 
       <div id="endingBadgeSlot"></div>
 
@@ -427,142 +437,341 @@
 
 <script>
 /* ================================================================
-   YOUR STORY GOES HERE
-   ----------------------------------------------------------------
-   Each entry in STORY.nodes is one "scene" of the story.
-
-   - id:        a short unique name for the scene (used internally)
-   - icon:      a single emoji shown above the scene (optional)
-   - heading:   short scene title shown to students
-   - text:      an array of strings — each string becomes one
-                paragraph. Write as many as you like.
-   - choices:   an array of 2–3 options, each with:
-                  label - the short choice text on the button
-                  hint  - (optional) a short second line of detail
-                  icon  - (optional) emoji shown on the button
-                  next  - the id of the scene this choice leads to
-   - ending:    set to true on final scenes (omit choices, or
-                leave choices out entirely — the Restart button
-                will show automatically)
-
-   Replace the sample story below with your own. Keep the same
-   shape (id, icon, heading, text, choices/ending) for each scene.
+   YOUR MERGED STORY DATA
    ================================================================ */
 
 const STORY = {
-  start: "gate",
+  start: "wake",
   nodes: {
-
-    gate: {
-      icon: "🏛️",
-      heading: "A Strange Morning",
+    wake: {
+      icon: "🐦",
+      image: "", // Insert image URL here if desired
+      heading: "The Awakening",
       text: [
-        "You wake-up one morning to find that your house is empty. You go to check your phone but find that there is no signal.",
-        "It seems odd. Outside, you can hear what sounds like hundreds of birds singing and shrieking."
+        "You awake one morning to the sound of shrieking birds outside. There are sirens sounding, dogs howling, and cats screeching!"
       ],
       choices: [
-        { icon: "🚪", label: "Look outside the window", 
-        { icon: "📞", label: "Turn on the TV", 
+        { icon: "🪟", label: "Look outside the window", next: "window" },
+        { icon: "📱", label: "Turn on your phone and check social media", next: "phone" }
       ]
     },
-
-    call: {
-      icon: "☎️",
-      heading: "No Answer",
+    window: {
+      icon: "🪟",
+      image: "", 
+      heading: "Looking Outside",
       text: [
-        "The office phone rings out. No one picks up.",
-        "You glance back at the doors. The light inside flickers, just once — like a page catching a breeze that shouldn't be there."
+        "The sky is frantic. Thousands of birds dart here and there. You can’t quite see what the problem is."
       ],
       choices: [
-        { icon: "🚪", label: "Go in anyway", hint: "Curiosity wins.", next: "hall" },
-        { icon: "🏠", label: "Head home and tell someone tomorrow", hint: "The safe choice.", next: "ending_safe" }
+        { icon: "📱", label: "Turn on your phone and check social media", next: "phone" },
+        { icon: "👥", label: "Go and see your family members in the home", next: "family" }
       ]
     },
-
-    hall: {
-      icon: "📚",
-      heading: "The Reading Hall",
+    phone: {
+      icon: "📱",
+      image: "",
+      heading: "Checking Social Media",
       text: [
-        "Inside, every lamp in the reading hall is on, but there's no one at the desks. A single book lies open in the middle of the long table, its pages fluttering with no wind at all.",
-        "On the cover, in your own handwriting, are the words: 'Finish the story.'"
+        "Your phone doesn’t have any signal."
       ],
       choices: [
-        { icon: "📖", label: "Read the open book", hint: "See what it says.", next: "book" },
-        { icon: "🔎", label: "Look for whoever left it there", hint: "Search the hall first.", next: "search" }
+        { icon: "🪟", label: "Look outside the window", next: "window" },
+        { icon: "👥", label: "Go and see your family members in the home", next: "family" },
+        { icon: "🚶", label: "Get dressed and go outside", next: "outside" },
+        { icon: "📺", label: "Turn on the TV", next: "tv" }
       ]
     },
-
-    search: {
-      icon: "🕯️",
-      heading: "Between the Shelves",
+    family: {
+      icon: "👥",
+      image: "",
+      heading: "The Empty House",
       text: [
-        "You walk the aisles. Nothing moves. But every third shelf, you notice, is missing exactly one book — always the same title, over and over.",
-        "You go back to the table. The open book is still waiting."
+        "You go through the house but can’t find any of your family members. They have vanished!",
+        "Even the animals are gone…"
       ],
       choices: [
-        { icon: "📖", label: "Read the open book", hint: "You're out of other ideas.", next: "book" }
+        { icon: "🚶", label: "Get dressed and go outside", next: "outside" },
+        { icon: "📺", label: "Turn on the TV", next: "tv" }
       ]
     },
-
-    book: {
-      icon: "✒️",
-      heading: "Finish the Story",
+    tv: {
+      icon: "📺",
+      image: "",
+      heading: "Emergency Broadcast",
       text: [
-        "The last page is blank except for a single sentence: 'The reader who finishes this book gets to write its ending.'",
-        "You pick up the pen resting in the spine."
+        "On the TV there is an emergency news bulletin. There is a reporter on the screen standing on a hill.",
+        "In the background you can see a huge red asteroid burning through the sky slowly. The reporter is very upset. He seems like he is about to cry.",
+        "“And for some reason many people have simply vanished. Some report seeing alien aircraft in the skies and people being beamed-up in pillars of light.”",
+        "Suddenly a red beam strikes the reporter and the TV stream ends. The TV then begins to crackle and the plugs spark. A fire starts in your room."
       ],
       choices: [
-        { icon: "🖋️", label: "Write a happy ending", hint: "Let the story rest.", next: "ending_happy" },
-        { icon: "🌙", label: "Write one more chapter instead", hint: "You're not ready for it to end.", next: "ending_open" }
+        { icon: "🎒", label: "Gather some supplies and run outside", next: "outside_supplies" },
+        { icon: "🛏️", label: "Go back to sleep", next: "sleep" }
       ]
     },
-
-    ending_safe: {
-      icon: "🌇",
-      heading: "Another Day",
+    sleep: {
+      icon: "💤",
+      image: "",
+      heading: "Going Back to Sleep",
       ending: true,
       text: [
-        "You never find out what was on that table. Some evenings, walking past the library, you swear you can still see a light on that shouldn't be.",
-        "THE END — you can restart to try a different path."
+        "The End. The alien invasion has wiped-out humanity. If you had chosen a different path perhaps you could have saved us all!"
       ]
     },
-
-    ending_happy: {
+    outside: {
+      icon: "🚗",
+      image: "",
+      heading: "Stepping Outside",
+      text: [
+        "The sky remains brightly lit with red, but for some reason it is now completely silent.",
+        "No more birds chirping or shrieking, no more dogs or cats or sirens. There is burning everywhere, though.",
+        "You notice a police car and an ambulance are parked up the road. Both vehicles have keys inside."
+      ],
+      choices: [
+        { icon: "🚓", label: "Choose to drive the police car", next: "police_car" },
+        { icon: "🚑", label: "Choose to drive the ambulance", next: "ambulance" }
+      ]
+    },
+    outside_supplies: {
+      icon: "🎒",
+      image: "",
+      heading: "Running Outside with Supplies",
+      text: [
+        "With a backpack full of food and tools, you make it out safely. The sky remains brightly lit with red, but it is completely silent.",
+        "No more birds chirping or shrieking, no more dogs or cats or sirens. There is burning everywhere, though.",
+        "You notice a police car and an ambulance are parked up the road. Both vehicles have keys inside."
+      ],
+      choices: [
+        { icon: "🚓", label: "Choose to drive the police car", next: "police_car" },
+        { icon: "🚑", label: "Choose to drive the ambulance", next: "ambulance" }
+      ]
+    },
+    police_car: {
+      icon: "🚓",
+      image: "",
+      heading: "The Police Car",
+      text: [
+        "Whoosh! Police cars can go very fast. And there are weapons in the backseat!",
+        "You cruise nice and fast, but OH NO! There is a line of cars blocking you near the motorway."
+      ],
+      choices: [
+        { icon: "💨", label: "Speed up to 100mph and jump over the cars", next: "speed" },
+        { icon: "🛑", label: "Break suddenly and try to find another path", next: "outside" }
+      ]
+    },
+    speed: {
+      icon: "💥",
+      image: "",
+      heading: "The Crash Jump",
+      text: [
+        "Your foot is to the floor, the car screams as it reaches 100mph, the steering feels loose, the car just about makes the ramp and you soar over the barrier of crashed cars…",
+        "And land with a smashing and a twisting. The car flips over once, twice, three times!",
+        "Everything goes black. When you wake-up, you are upside-down in the driver seat. You can smell diesel. Your shoulder is in immense pain.",
+        "You hear someone calling your name. It’s Jason! He is by the window and helps you out of the car just in time before it explodes (destroying your backpack with all your belongings if you had them).",
+        "“Fancy seeing you here!” he says. You can see he has a backpack full of food and tools. He is standing next to the bridge - down below is a rocky valley."
+      ],
+      choices: [
+        { icon: "✋", label: "Push Jason off the bridge and steal his backpack", next: "push_jason_valley" },
+        { icon: "❓", label: "Ask Jason what the hell is going on?!", next: "ask_jason" }
+      ]
+    },
+    push_jason_valley: {
+      icon: "🪨",
+      image: "",
+      heading: "A Ruthless Act",
+      ending: true,
+      text: [
+        "You push him! Jason goes tumbling down into the valley below. You see his lifeless body on the rocks below. You laugh.",
+        "However, without his coordination or knowledge of what to do next, you eventually fall victim to the unfolding chaos.",
+        "The End!"
+      ]
+    },
+    ask_jason: {
+      icon: "💬",
+      image: "",
+      heading: "Jason's Plan",
+      text: [
+        "Jason begins to explain that the aliens are at Ham Hill.",
+        "He has a blue bolt gun called a Sonic Boom which he has been working on. He says you can use it to destroy the aliens. Will you come with him on the mission?"
+      ],
+      choices: [
+        { icon: "✅", label: "Accept the mission", next: "accept" },
+        { icon: "❌", label: "Refuse the mission and just go explore the land", next: "refuse" }
+      ]
+    },
+    ambulance: {
+      icon: "🚑",
+      image: "",
+      heading: "The Ambulance",
+      text: [
+        "The ambulance isn’t very fast, but it’s strong, and you get to the motorway with no problems.",
+        "You feel drawn towards the asteroid, so you head in that direction.",
+        "In the back you suddenly hear someone moan in pain. You stop the ambulance and look in the back. It’s an elderly man on a bed with a ventilation mask on.",
+        "As you go to help him, you see a masked man grab your backpack from the front seat and go running off."
+      ],
+      choices: [
+        { icon: "🏃", label: "Chase the masked man", next: "chase" },
+        { icon: "❤️", label: "Help the elderly man", next: "help" }
+      ]
+    },
+    chase: {
+      icon: "🏃",
+      image: "",
+      heading: "The High Bridge Chase",
+      text: [
+        "You run after the masked man. He is super-quick, but you are also quick. You manage to keep up as he reaches a high bridge which is above a valley.",
+        "He trips on a piece of steel and you catch up to him. You tear his mask off.",
+        "It’s Jason!"
+      ],
+      choices: [
+        { icon: "✋", label: "Push Jason off the bridge", next: "push_jason_chase" },
+        { icon: "❓", label: "Ask Jason what the hell is going on?", next: "ask_jason_chase" }
+      ]
+    },
+    push_jason_chase: {
+      icon: "🛑",
+      image: "",
+      heading: "The Confrontation",
+      text: [
+        "Before you strike, Jason frantically begins to explain that the aliens are at Ham Hill. He says he has a blue bolt gun called a Sonic Boom which he has been working on to destroy the aliens.",
+        "But your anger takes over—you push him! Jason goes tumbling down into the valley below. You see his lifeless body on the rocks below. You laugh."
+      ],
+      choices: [
+        { icon: "💪", label: "Accept the mission layout he mentioned", next: "accept" },
+        { icon: "🧭", label: "Refuse the mission and just go explore", next: "refuse" }
+      ]
+    },
+    ask_jason_chase: {
+      icon: "🗣️",
+      image: "",
+      heading: "Answers Revealed",
+      text: [
+        "Jason begins to explain that the aliens are at Ham Hill. He has a blue bolt gun called a Sonic Boom which he has been working on.",
+        "He says we can use it to destroy the aliens. Will you come with him on the mission?"
+      ],
+      choices: [
+        { icon: "🤝", label: "Accept the mission (and secretly push Jason off later)", next: "accept" },
+        { icon: "🚶", label: "Refuse the mission (and push Jason off right now)", next: "refuse_and_push" }
+      ]
+    },
+    refuse_and_push: {
+      icon: "🪨",
+      image: "",
+      heading: "Left Alone",
+      text: [
+        "You push Jason off the bridge to secure his gear for yourself and walk away into the ruined countryside."
+      ],
+      choices: [
+        { icon: "⏩", label: "Continue exploring", next: "refuse" }
+      ]
+    },
+    help: {
+      icon: "👨‍⚕️",
+      image: "",
+      heading: "Dr Robot",
+      text: [
+        "You put the ventilator back on the old man. He takes some deep breaths and you can see him come back to life. He removes the mask and says “thank you!”",
+        "He introduces himself as Dr Robot. He explains that aliens are invading Earth and there is only one way to stop them.",
+        "“We must fire this Sonic Boom at the mother ship,” he says, holding out a blue bolt gun.",
+        "“Will you accept this mission? You have to go to the top of Ham Hill and fire it at the aliens. Please, to save humanity, will you do it?”"
+      ],
+      choices: [
+        { icon: "🦅", label: "Accept the mission", next: "accept" },
+        { icon: "🌍", label: "Refuse the mission and just go explore the land", next: "refuse" }
+      ]
+    },
+    refuse: {
+      icon: "🌋",
+      image: "",
+      heading: "The Super-Beam",
+      ending: true,
+      text: [
+        "You have a good few days exploring the land until the aliens fire a super-beam laser which destroys the whole land.",
+        "The End!"
+      ]
+    },
+    accept: {
+      icon: "⛰️",
+      image: "",
+      heading: "Ham Hill",
+      text: [
+        "You make your way to Ham Hill where you encounter your peers from the Base!",
+        "It seems they have made their way to Ham Hill as there were rumours that the army were there. But when they arrived, the alien spaceship blasted the army to dust."
+      ],
+      choices: [
+        { icon: "⚡", label: "Blast your Base peers to dust", next: "blast" },
+        { icon: "🤝", label: "Collaborate with your Base peers to confront the aliens", next: "collaborate" }
+      ]
+    },
+    collaborate: {
+      icon: "🛡️",
+      image: "",
+      heading: "United Front",
+      text: [
+        "You team up with your peers from the Base. Together, you form a perimeter around the crest of the hill, using the Sonic Boom coordinates to trace the mothership's structural weak point."
+      ],
+      choices: [
+        { icon: "🔫", label: "Fire the weapon!", next: "shoot" }
+      ]
+    },
+    blast: {
+      icon: "😈",
+      image: "",
+      heading: "Power Trip",
+      text: [
+        "The Sonic Boom is a wonderful weapon! One pull of the trigger and your peers are gone! You laugh. You start firing it at everything around you.",
+        "Suddenly a bleeping sound comes near you. You turn to see a huge pheasant, grinning at you. It has red eyes.",
+        "“Ho ho ho! Merry invasion! All these years we have been studying you. That’s right! We pheasants are aliens. We’ve seen what you’ve done to our little buddies, and now we are here for revenge. I will make you one deal: apologise now, and I will let all your people free, or refuse to apologise and I will gobble you up like a lovely KFC!!”"
+      ],
+      choices: [
+        { icon: "🙇", label: "Apologise to the pheasant aliens", next: "apologise" },
+        { icon: "💥", label: "Shoot the Sonic Boom!", next: "shoot" }
+      ]
+    },
+    apologise: {
+      icon: "🦃",
+      image: "",
+      heading: "The Deception",
+      ending: true,
+      text: [
+        "You apologise as best you can. The pheasant nods, flaps its wings, and then begins to laugh.",
+        "“Silly humans! You are like dust compared to our species!”",
+        "Your body goes numb and you drop to the hard ground.",
+        "When you wake up you are in a woodland. There are other humans around you, dazed and frightened. One of them looks at you and tells you to “shush!”",
+        "In the distance of the trees you see giant pheasants wandering around, chuckling.",
+        "This is THE END OF HUMANITY!"
+      ]
+    },
+    shoot: {
       icon: "🏆",
-      heading: "The Last Page",
+      image: "",
+      heading: "Earth Saved",
       ending: true,
       text: [
-        "You write three simple lines, close the book, and the lamps dim to their ordinary evening glow.",
-        "In the morning, the librarian finds the book back on its shelf — closed, finished, and perfectly ordinary.",
-        "THE END — you can restart to try a different path."
-      ]
-    },
-
-    ending_open: {
-      icon: "🌙",
-      heading: "To Be Continued",
-      ending: true,
-      text: [
-        "You write one more chapter, and the pen doesn't stop when you lift it. It keeps writing on its own, sentences spilling out faster than you can read them.",
-        "The library light is still on, every night, waiting for the next reader to pick up where you left off.",
-        "THE END — you can restart to try a different path."
+        "In one smooth action you flip the Sonic Boom up and pull the trigger. A blue blast terminates the target - only dust is left!",
+        "Victory!",
+        "The sky turns from dark red to a pale blue again. The asteroid is no longer in the sky. You hear the chirping of birds again. You see people walking their dogs as if nothing has happened.",
+        "In the distance you can see there are no more fires, no more chaos. All is well.",
+        "Well done buddy - you saved us all. You begin to walk back home.",
+        "A pheasant chuckles in the distance.",
+        "The End."
       ]
     }
-
   }
 };
 
 /* ================================================================
-   STORY ENGINE — no need to edit anything below this line
+   STORY ENGINE
    ================================================================ */
 
 const state = {
   currentId: STORY.start,
-  visited: [] // { id, heading, icon }
+  visited: []
 };
 
 const el = {
   icon: document.getElementById("sceneIcon"),
+  image: document.getElementById("sceneImage"),
   heading: document.getElementById("sceneHeading"),
   text: document.getElementById("sceneText"),
   choicesSlot: document.getElementById("choicesSlot"),
@@ -582,11 +791,7 @@ function renderTrail(){
     btn.type = "button";
     btn.dataset.current = isCurrent ? "true" : "false";
     btn.disabled = isCurrent;
-    btn.setAttribute("aria-label",
-      isCurrent
-        ? `Current scene: ${step.heading}`
-        : `Go back to: ${step.heading}`
-    );
+    btn.setAttribute("aria-label", isCurrent ? `Current: ${step.heading}` : `Back to: ${step.heading}`);
 
     const dot = document.createElement("span");
     dot.className = "trail-dot";
@@ -618,12 +823,22 @@ function goToStep(index){
 function render(scrollFocus = true){
   const node = STORY.nodes[state.currentId];
   if (!node){
-    console.error("Missing story node:", state.currentId);
+    console.error("Missing node:", state.currentId);
     return;
   }
 
   el.icon.textContent = node.icon || "📖";
   el.heading.textContent = node.heading || "";
+
+  // Handle Image Dynamic Loading
+  // Replace empty strings "" in STORY data array nodes with image URLs to show them!
+  if(node.image && node.image.trim() !== "") {
+    el.image.src = node.image;
+    el.image.style.display = "block";
+  } else {
+    el.image.style.display = "none";
+    el.image.src = "";
+  }
 
   el.text.innerHTML = "";
   (node.text || []).forEach(paragraph => {
@@ -662,7 +877,6 @@ function render(scrollFocus = true){
         <span class="choice-icon" aria-hidden="true">${choice.icon || "➡️"}</span>
         <span>
           <span class="choice-label">${choice.label}</span>
-          ${choice.hint ? `<span class="choice-hint">${choice.hint}</span>` : ""}
         </span>
       `;
       li.appendChild(btn);
@@ -696,7 +910,6 @@ function restart(){
 
 el.restartBtn.addEventListener("click", restart);
 
-/* Text size controls */
 document.querySelectorAll(".text-controls button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.documentElement.style.setProperty("--text-scale", btn.dataset.size);
@@ -706,7 +919,6 @@ document.querySelectorAll(".text-controls button").forEach(btn => {
   });
 });
 
-/* Init */
 restart();
 </script>
 
